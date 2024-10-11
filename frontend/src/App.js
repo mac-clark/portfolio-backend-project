@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
+import Dashboard from './components/Dashboard';
 import './App.css'; // Add your styles here
 
 function App() {
@@ -30,7 +31,7 @@ function App() {
         {/* Routes to render content */}
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          {/* Add other routes as necessary */}
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
 
         {/* Toggle button at the bottom-right corner */}

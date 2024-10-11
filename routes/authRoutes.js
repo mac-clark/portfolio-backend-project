@@ -41,11 +41,25 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid Credentials' });
         }
 
-        // Create a session or send back a token here (not implemented yet)
+        // Create a session
+        req.session.userId = user._id;
+        req.session.username = user.username;
         res.json({ message: 'Login successful', userId: user._id });
     } catch (err) {
         res.status(500).json({ message: 'Server error', err });
     }
+});
+
+// Log a user out
+router.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error logging out' });
+        }
+
+        res.clearCookie('connect.sid'); // Clear session cookie
+        res.json({ message: 'Logged out successfully' });
+    })
 });
 
 module.exports = router;

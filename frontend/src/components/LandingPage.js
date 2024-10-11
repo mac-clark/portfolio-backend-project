@@ -57,7 +57,6 @@ const LandingPage = () => {
     try {
       const response = await axios.post('http://localhost:5000/auth/login', loginData);
       if (response.data.message === 'Login successful') {
-        window.alert('Login successful!');
         navigate('/dashboard'); // Redirect to the dashboard after login
       }
     } catch (error) {
