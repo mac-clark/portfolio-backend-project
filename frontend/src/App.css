@@ -1,38 +1,42 @@
-.App {
-  text-align: center;
+/* Apply theme to text elements only, excluding buttons */
+body.light,
+body.light h1,
+body.light p,
+body.light div {
+  background-color: #ffffff;
+  color: #333333;
+  transition: all 0.3s ease-in-out, color 0.5s ease;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body.dark,
+body.dark h1,
+body.dark p,
+body.dark div {
+  background-color: #333333;
+  color: #ffffff;
+  transition: all 0.3s ease-in-out, color 0.5s ease;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Keep button styles intact */
+button {
+  background-color: initial;
+  color: initial;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+/* Theme toggle button specific styles */
+.theme-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  border: none;
+  background-color: #007bff;
   color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 1000;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.theme-toggle-btn:hover {
+  opacity: 0.8;
 }

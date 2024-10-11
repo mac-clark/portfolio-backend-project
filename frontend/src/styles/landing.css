@@ -1,0 +1,59 @@
+/* src/styles/landing.css */
+.landing-container {
+    text-align: center;
+    padding: 50px;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #333;
+    font-size: 48px;
+}
+
+p {
+    color: #666;
+    font-size: 18px;
+}
+
+.cta-buttons {
+    margin-top: 30px;
+}
+
+.primary-btn,
+.secondary-btn {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.primary-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.secondary-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+    opacity: 0.8;
+}
+
+.form-group {
+    padding: 1rem;
+}
+
+.form-group input {
+    width: 15%;
+    padding: 0.75rem;
+    color: black;
+    border-radius: 10px;
+    border: 1px solid black;
+}
