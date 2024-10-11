@@ -12,7 +12,14 @@ app.use(express.json());
 // Connect to database
 connectDB();
 
-// Import and use routes
+// Import routes
+const authRoutes = require('./routes/authRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const expenseRoutes = require('./routes/expenseRoutes');
+
+app.use('/auth', authRoutes);
+app.use('/categories', categoryRoutes);
+app.use('/expenses', expenseRoutes);
 
 // Root message
 app.get('/', (req, res) => {
