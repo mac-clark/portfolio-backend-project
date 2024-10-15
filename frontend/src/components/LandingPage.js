@@ -55,7 +55,7 @@ const LandingPage = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/auth/login', loginData);
+      const response = await axios.post('http://localhost:5000/auth/login', loginData, { withCredentials: true });
       if (response.data.message === 'Login successful') {
         navigate('/dashboard'); // Redirect to the dashboard after login
       }

@@ -7,7 +7,10 @@ const sessionConfig = require('./config/session');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',  // The frontend URL
+  credentials: true,  // This allows cookies (credentials) to be sent cross-origin
+}));
 app.use(express.json());
 
 // Connect to database

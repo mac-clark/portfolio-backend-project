@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const axios = require('axios');
 
 // Register a new user
 router.post('/register', async (req, res) => {
@@ -17,6 +18,18 @@ router.post('/register', async (req, res) => {
         // Create a new user
         user = new User({ username, email, password, fullName });
         await user.save();
+
+        // Initialize default categories after successful user registration
+        try {
+            await axios.post('http://localhost:5000/categories/init-default-categories');
+            console.log('Default categories initialized');
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                console.log('Default categories already exist');
+            } else {
+                console.error('Error initializing default categories:', error);
+            }
+        }
 
         res.status(201).json({ message: 'User registered succsessfully' });
     } catch (err) {

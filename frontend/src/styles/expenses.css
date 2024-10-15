@@ -1,0 +1,70 @@
+.expenses-container {
+    width: 100%;
+    padding: 20px;
+}
+
+h2 {
+    text-align: left;
+    font-size: 28px;
+}
+
+.add-expense-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    width: 75%;
+}
+
+.add-expense-form input, .add-expense-form select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    flex: 1; /* Equal space for each input field */
+}
+
+.add-expense-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-expense-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Make the expenses list full width */
+.expenses-list {
+    width: 75%;
+    margin-left: 0;
+}
+
+.expense-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.expense-item button {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.expense-item button:hover {
+    background-color: #c82333;
+}

@@ -1,11 +1,13 @@
-// src/components/Dashboard.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/dashboard.css'; // Import the CSS file for dashboard styling
+import Expenses from './Expenses'; // Import the Expenses component
+import Categorize from './Categorize'; // Placeholder component for Categorize
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('expenses'); // Manage the active tab state
 
   // Logout function
   const handleLogout = async () => {
@@ -15,12 +17,22 @@ const Dashboard = () => {
       
       // Notify user of successful logout and clear session data
       window.alert('Logged out successfully!');
-
-      // Redirect to the landing page after logout
-      navigate('/');
+      navigate('/'); // Redirect to the landing page after logout
     } catch (error) {
       console.error('Error logging out:', error);
       window.alert('Failed to log out. Please try again.');
+    }
+  };
+
+  // Function to render the main content based on the selected tab
+  const renderMainContent = () => {
+    switch (activeTab) {
+      case 'expenses':
+        return <Expenses />; // Display the Expenses component
+      case 'categorize':
+        return <Categorize />; // Placeholder for Categorize component
+      default:
+        return <h2>Select an option from the sidebar</h2>;
     }
   };
 
@@ -33,30 +45,17 @@ const Dashboard = () => {
       <div className="dashboard-container">
         <div className="sidebar">
           <ul>
-            <li><h3>Expenses</h3></li>
+            <li onClick={() => setActiveTab('expenses')}><h3>Expenses</h3></li>
             <hr />
-            <li><h3>Categorize</h3></li>
-            <hr />
-            <li><h3>Other</h3></li>
-            <hr />
-            <li><h3>Other</h3></li>
-            <hr />
-            <li><h3>Other</h3></li>
+            <li onClick={() => setActiveTab('categorize')}><h3>Categorize</h3></li>
             <hr />
             <li onClick={handleLogout}><h3>Logout</h3></li>
             <hr />
           </ul>
         </div>
         <div className="main-content">
-          <div className="expenses-list">
-            <h2>Recent Expenses</h2>
-            {/* You can dynamically map through expenses here */}
-            {[...Array(30)].map((_, index) => (
-              <div key={index} className="expense-item">
-                Expense {index + 1}: $100 on groceries
-              </div>
-            ))}
-          </div>
+          {/* Render main content dynamically based on activeTab */}
+          {renderMainContent()}
         </div>
       </div>
     </>

@@ -2,17 +2,19 @@
 const express = require('express');
 const router = express.Router();
 const Expense = require('../models/Expense');
+const isAuthenticated = require('../middleware/authMiddleware');
 
-// Create a new expense
-router.post('/expense', async (req, res) => {
-    const { userId, amount, description, categoryId } = req.body;
+// Create a new expense (only accessible if authenticated)
+router.post('/expense', isAuthenticated, async (req, res) => {
+    const { userId } = req.session;
+    const { amount, description, category } = req.body;
 
     try {
         const expense = new Expense({
             user: userId,
             amount,
             description,
-            category: categoryId,
+            category,
             date: new Date(),
         });
 
@@ -23,13 +25,28 @@ router.post('/expense', async (req, res) => {
     }
 });
 
-// Get al expenses for a specific user
-router.get('/expense/:id', async (req, res) => {
-    const { userId } = req.params;
+// Get all expenses for a specific user (only accessible if authenticated)
+router.get('/', isAuthenticated, async (req, res) => {
+    const { userId } = req.session;  // Get userId from the session
 
     try {
         const expenses = await Expense.find({ user: userId }).populate('category', 'name');
         res.json(expenses);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', err });
+    }
+});
+
+// Delete expense route (protected)
+router.delete('/expense/:id', isAuthenticated, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const deletedExpense = await Expense.findByIdAndDelete(id);
+        if (!deletedExpense) {
+            return res.status(404).json({ message: 'Expense not found' });
+        }
+        res.json({ message: 'Expense deleted successfully' });
     } catch (err) {
         res.status(500).json({ message: 'Server error', err });
     }

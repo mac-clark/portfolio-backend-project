@@ -41,17 +41,3 @@
     max-height: calc(100vh - 100px); /* Adjust for header height */
   }
   
-  /* Expenses list container */
-  .expenses-list {
-    max-height: 100%;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Individual expense item styling */
-  .expense-item {
-    padding: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-  
