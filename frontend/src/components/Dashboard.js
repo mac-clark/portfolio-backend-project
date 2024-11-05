@@ -1,23 +1,35 @@
-import React, { useState } from 'react';
+// src/components/Dashboard.js
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/dashboard.css'; // Import the CSS file for dashboard styling
-import Expenses from './Expenses'; // Import the Expenses component
-import Categorize from './Categorize'; // Placeholder component for Categorize
+import '../styles/dashboard.css';
+import Expenses from './Expenses';
+import Categorize from './Categorize';
+import Visualize from './Visualize'; // Import Visualize component
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('expenses'); // Manage the active tab state
+  const [activeTab, setActiveTab] = useState('expenses'); // Default tab
+  const [userFullName, setUserFullName] = useState('');
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/auth/user', { withCredentials: true });
+        setUserFullName(response.data.fullName);
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    };
+    fetchUserInfo();
+  }, []);
 
   // Logout function
   const handleLogout = async () => {
     try {
-      // Send a POST request to the backend to logout
       await axios.post('http://localhost:5000/auth/logout');
-      
-      // Notify user of successful logout and clear session data
       window.alert('Logged out successfully!');
-      navigate('/'); // Redirect to the landing page after logout
+      navigate('/');
     } catch (error) {
       console.error('Error logging out:', error);
       window.alert('Failed to log out. Please try again.');
@@ -28,9 +40,11 @@ const Dashboard = () => {
   const renderMainContent = () => {
     switch (activeTab) {
       case 'expenses':
-        return <Expenses />; // Display the Expenses component
+        return <Expenses />;
       case 'categorize':
-        return <Categorize />; // Placeholder for Categorize component
+        return <Categorize />;
+      case 'visualize':
+        return <Visualize />; // Render the Visualize component
       default:
         return <h2>Select an option from the sidebar</h2>;
     }
@@ -39,7 +53,7 @@ const Dashboard = () => {
   return (
     <>
       <div className="header">
-        <h1>Welcome to your Dashboard</h1>
+        <h1>Welcome, {userFullName}</h1>
         <p>Select an option from the sidebar to get started.</p>
       </div>
       <div className="dashboard-container">
@@ -49,12 +63,13 @@ const Dashboard = () => {
             <hr />
             <li onClick={() => setActiveTab('categorize')}><h3>Categorize</h3></li>
             <hr />
+            <li onClick={() => setActiveTab('visualize')}><h3>Visualize</h3></li>
+            <hr />
             <li onClick={handleLogout}><h3>Logout</h3></li>
             <hr />
           </ul>
         </div>
         <div className="main-content">
-          {/* Render main content dynamically based on activeTab */}
           {renderMainContent()}
         </div>
       </div>

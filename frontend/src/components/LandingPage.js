@@ -67,8 +67,8 @@ const LandingPage = () => {
 
   return (
     <div className="landing-container">
-      <h1>Welcome to the Expense Tracker App</h1>
-      <p>Manage your expenses effortlessly.</p>
+      <h1>Welcome to Mac's Expense Tracker App</h1>
+      <p>Created solely by <a className='dev-links' href='https://clarkcodes.dev' rel='noreferrer' target='_blank'>MacKenzie Clark</a></p>
 
       {/* Conditionally render the sign-up or login form or buttons */}
       {showRegisterForm ? (

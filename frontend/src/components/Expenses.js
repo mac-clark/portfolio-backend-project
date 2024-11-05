@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/expenses.css'; // Create a new CSS file for expenses styling
+import '../styles/expenses.css';
 
 const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
@@ -8,23 +8,18 @@ const Expenses = () => {
   const [newExpense, setNewExpense] = useState({
     description: '',
     amount: '',
-    category: ''
+    category: '',
+    date: new Date().toISOString().split('T')[0]  // Default to today's date
   });
 
   // Fetch expenses and categories on component mount
   useEffect(() => {
     const fetchExpensesAndCategories = async () => {
-      try {
-        const expensesResponse = await axios.get('http://localhost:5000/expenses', { withCredentials: true });
-        setExpenses(expensesResponse.data);
-
-        const categoriesResponse = await axios.get('http://localhost:5000/categories/category', { withCredentials: true });
-        setCategories(categoriesResponse.data);
-      } catch (error) {
-        console.error('Error fetching expenses or categories:', error);
-      }
+      await fetchExpenses(); // Fetch expenses separately to use later in handleAddExpense
+      const categoriesResponse = await axios.get('http://localhost:5000/categories/category', { withCredentials: true });
+      setCategories(categoriesResponse.data);
     };
-
+  
     fetchExpensesAndCategories();
   }, []);
 
@@ -39,13 +34,22 @@ const Expenses = () => {
 
   // Handle adding a new expense
   const handleAddExpense = async () => {
-    console.log(newExpense);
     try {
-      const response = await axios.post('http://localhost:5000/expenses/expense', newExpense, { withCredentials: true });
-      setExpenses((prevExpenses) => [...prevExpenses, response.data]);
-      setNewExpense({ description: '', amount: '', category: '' }); // Reset form
+      await axios.post('http://localhost:5000/expenses/expense', newExpense, { withCredentials: true });
+      setNewExpense({ description: '', amount: '', category: '', date: new Date().toISOString().split('T')[0] }); // Reset form
+      fetchExpenses(); // Refetch all expenses to get the latest data, including categories
     } catch (error) {
       console.error('Error adding expense:', error);
+    }
+  };
+  
+  // Refactor fetchExpenses into a separate function
+  const fetchExpenses = async () => {
+    try {
+      const expensesResponse = await axios.get('http://localhost:5000/expenses', { withCredentials: true });
+      setExpenses(expensesResponse.data);
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
     }
   };
 
@@ -61,52 +65,60 @@ const Expenses = () => {
 
   return (
     <div className="expenses-container">
-        <h2>Your Expenses</h2>
+      <h2>Your Expenses</h2>
 
-        {/* Form to add new expense */}
-        <div className="add-expense-form">
-            <select
-                name="category"
-                value={newExpense.category}
-                onChange={handleInputChange}
-            >
-                <option value="">Select a category</option>
-                {categories.map((category) => (
-                    <option key={category._id} value={category._id}>
-                        {category.name}
-                    </option>
-                ))}
-            </select>
-            <input
-                type="number"
-                name="amount"
-                value={newExpense.amount}
-                onChange={handleInputChange}
-                placeholder="Amount"
-            />
-            <input
-                type="text"
-                name="description"
-                value={newExpense.description}
-                onChange={handleInputChange}
-                placeholder="Description"
-            />
-            <button onClick={handleAddExpense}>Add Expense</button>
-        </div>
+      {/* Form to add new expense */}
+      <div className="add-expense-form">
+        <select
+          name="category"
+          value={newExpense.category}
+          onChange={handleInputChange}
+        >
+          <option value="">Select a category</option>
+          {categories.map((category) => (
+            <option key={category._id} value={category._id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+        <input
+          type="number"
+          name="amount"
+          value={newExpense.amount}
+          onChange={handleInputChange}
+          placeholder="Amount"
+        />
+        <input
+          type="text"
+          name="description"
+          value={newExpense.description}
+          onChange={handleInputChange}
+          placeholder="Description"
+        />
+        <input
+          type="date"
+          name="date"
+          value={newExpense.date}
+          onChange={handleInputChange}
+        />
+        <button onClick={handleAddExpense}>Add Expense</button>
+      </div>
 
-        {/* Display list of expenses */}
-        <div className="expenses-list">
-            {expenses.length ? (
-                expenses.map((expense, index) => (
-                    <div key={expense._id || index} className="expense-item">
-                        <p>{expense.category.name}: ${expense.amount} - {expense.description}</p>
-                        <button onClick={() => handleDeleteExpense(expense._id)}>Delete</button>
-                    </div>
-                ))
-            ) : (
-                <p>No expenses found</p>
-            )}
-        </div>
+      {/* Display list of expenses */}
+      <div className="expenses-list">
+        {expenses.length ? (
+          expenses.map((expense, index) => (
+            <div key={expense._id || index} className="expense-item">
+              <p>
+                {expense.category?.name || 'Uncategorized'}: ${expense.amount} - {expense.description} ({new Date(expense.date).toLocaleDateString()})
+              </p>
+              <button onClick={() => handleDeleteExpense(expense._id)}>Delete</button>
+            </div>
+          ))
+        ) : (
+          <p>No expenses found</p>
+        )}
+      </div>
     </div>
   );
 };

@@ -57,3 +57,12 @@ p {
     border-radius: 10px;
     border: 1px solid black;
 }
+
+.login-form h2 {
+    text-align: center;
+}
+
+.dev-links {
+    text-decoration: none;
+    color: #007bff;
+}

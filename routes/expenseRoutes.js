@@ -7,7 +7,7 @@ const isAuthenticated = require('../middleware/authMiddleware');
 // Create a new expense (only accessible if authenticated)
 router.post('/expense', isAuthenticated, async (req, res) => {
     const { userId } = req.session;
-    const { amount, description, category } = req.body;
+    const { amount, description, category, date } = req.body;
 
     try {
         const expense = new Expense({
@@ -15,7 +15,7 @@ router.post('/expense', isAuthenticated, async (req, res) => {
             amount,
             description,
             category,
-            date: new Date(),
+            date: date || new Date(),
         });
 
         await expense.save();
@@ -47,6 +47,25 @@ router.delete('/expense/:id', isAuthenticated, async (req, res) => {
             return res.status(404).json({ message: 'Expense not found' });
         }
         res.json({ message: 'Expense deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', err });
+    }
+});
+
+// Get expenses within a range
+router.get('/range', isAuthenticated, async (req, res) => {
+    const { userId } = req.session;
+    const { startDate, endDate } = req.query;
+
+    try {
+        const expenses = await Expense.find({
+            user: userId,
+            date: {
+                $gte: new Date(startDate),
+                $lte: new Date(endDate)
+            }
+        }).populate('category', 'name'); // Populate category name
+        res.json(expenses);
     } catch (err) {
         res.status(500).json({ message: 'Server error', err });
     }
